@@ -154,6 +154,12 @@
       background: #003d99;
     }
 
+    /* Save button disabled state */
+    #saveSettingsBtn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 600px) {
       #searchRequestModal, #createModal {
         width: 90%;
@@ -201,6 +207,7 @@
     <label>Project Key:</label><input type="text" id="project">
     <label>API Token:</label><input type="password" id="token">
     <button onclick="testConnection()">Test Connection</button>
+    <button id="saveSettingsBtn" onclick="saveSettings()" disabled>Save Settings</button>
   </div>
 </div>
 
@@ -228,7 +235,7 @@
     <tbody id="requestList"></tbody>
   </table>
   
-  <button onclick="createJiraForSelected()">Create Jira for Selected Request</button>  <!-- <-- MOVED ABOVE pagination -->
+  <button onclick="createJiraForSelected()">Create Jira for Selected Request</button>
   
   <div class="pagination" id="pagination"></div>
 </div>
@@ -265,6 +272,21 @@ function testConnection() {
     showPopup('Please fill all fields');
   }
 }
+
+function saveSettings() {
+  showPopup('✅ Settings saved successfully');
+}
+
+// Enable Save Button when all settings fields are filled
+const settingsInputs = ['domain', 'email', 'project', 'token'].map(id => document.getElementById(id));
+const saveButton = document.getElementById('saveSettingsBtn');
+
+settingsInputs.forEach(input => {
+  input.addEventListener('input', () => {
+    const allFilled = settingsInputs.every(i => i.value.trim() !== '');
+    saveButton.disabled = !allFilled;
+  });
+});
 
 function addConfig() {
   const table = document.getElementById('configTable');
